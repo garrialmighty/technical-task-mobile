@@ -3,30 +3,29 @@ import { SafeAreaView, FlatList, TextInput } from 'react-native';
 import OffPisteCell from '../../components/OffPisteCell';
 import styles from './styles';
 
-// TODO: - load static data using Redux in preparation for backend service
+// TODO: - load static data to Redux store
 import OffPisteData from '../../../off-pistes.json';
-
-// TOOD: - move to a separate screen
-import PisteMapView from '../OffPisteMapScreen';
 
 export default class OffPisteScreen extends Component {
   constructor() {
     super();
     this.state = {
       searchText: '',
-      filteredPisteData: [],
-      selected: undefined,
+      filteredPisteData: []
     };
   }
 
-  renderItem = ({ item }) => (
-    <OffPisteCell
-      data={item}
-      onPress={() => this.setState({
-        selected: item
-      })}
-    />
-  );
+  renderItem = ({ item }) => {
+    const { navigation: { navigate } } = this.props;
+    return (
+      <OffPisteCell
+        data={item}
+        onPress={() => navigate('Map', {
+          item
+        })}
+      />
+    );
+  };
 
   filter = (text) => {
     const searchText = text.toLowerCase();
@@ -39,27 +38,23 @@ export default class OffPisteScreen extends Component {
   };
 
   render() {
-    const { selected, searchText, filteredPisteData } = this.state;
+    const { searchText, filteredPisteData } = this.state;
     const data = searchText === '' ? OffPisteData : filteredPisteData;
     return (
-      selected === undefined ? (
-        <SafeAreaView style={styles.container}>
-          <TextInput
-            style={styles.searchField}
-            onChangeText={this.filter}
-            clearButtonMode="always"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          <FlatList
-            data={data}
-            keyExtractor={({ id }) => `${id}`}
-            renderItem={this.renderItem}
-          />
-        </SafeAreaView>
-      ) : (
-        <PisteMapView styles={styles.container} siteData={selected} />
-      )
+      <SafeAreaView style={styles.container}>
+        <TextInput
+          style={styles.searchField}
+          onChangeText={this.filter}
+          clearButtonMode="always"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <FlatList
+          data={data}
+          keyExtractor={({ id }) => `${id}`}
+          renderItem={this.renderItem}
+        />
+      </SafeAreaView>
     );
   }
 }
