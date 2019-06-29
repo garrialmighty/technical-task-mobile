@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, FlatList } from 'react-native';
+import { SafeAreaView, FlatList, TextInput } from 'react-native';
 import OffPisteCell from '../../components/OffPisteCell';
 import styles from './styles';
 
@@ -13,6 +13,8 @@ export default class OffPisteScreen extends Component {
   constructor() {
     super();
     this.state = {
+      searchText: '',
+      filteredPisteData: [],
       selected: undefined,
     };
   }
@@ -26,13 +28,31 @@ export default class OffPisteScreen extends Component {
     />
   );
 
+  filter = (text) => {
+    const searchText = text.toLowerCase();
+    const filteredPisteData = OffPisteData.filter(d => d.name.toLowerCase().includes(searchText));
+
+    this.setState({
+      searchText,
+      filteredPisteData
+    });
+  };
+
   render() {
-    const { selected } = this.state;
+    const { selected, searchText, filteredPisteData } = this.state;
+    const data = searchText === '' ? OffPisteData : filteredPisteData;
     return (
       selected === undefined ? (
         <SafeAreaView style={styles.container}>
+          <TextInput
+            style={styles.searchField}
+            onChangeText={this.filter}
+            clearButtonMode="always"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
           <FlatList
-            data={OffPisteData}
+            data={data}
             keyExtractor={({ id }) => `${id}`}
             renderItem={this.renderItem}
           />
