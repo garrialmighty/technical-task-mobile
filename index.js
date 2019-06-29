@@ -3,7 +3,7 @@
  */
 
 import { AppRegistry } from 'react-native';
-import OffPisteScreen from './src/containers/OffPisteScreen';
+import AppNavigator from './src/navigation';
 import { name as appName } from './app.json';
 
-AppRegistry.registerComponent(appName, () => OffPisteScreen);
+AppRegistry.registerComponent(appName, () => AppNavigator);
