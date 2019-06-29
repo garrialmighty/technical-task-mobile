@@ -7,9 +7,9 @@ class OffPisteCell extends PureComponent {
   render() {
     const { onPress, data: { name, description } } = this.props;
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity style={styles.container} onPress={onPress}>
         <View>
-          <Text>{name}</Text>
+          <Text style={styles.title}>{name}</Text>
           <Text>{description}</Text>
           <View style={styles.separator} />
         </View>
